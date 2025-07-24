@@ -4,17 +4,14 @@ import { Button } from '@/components/button';
 import { Input } from '@/components/input';
 import { InputPassword } from '@/components/input-password';
 import { LogoHeader } from '@/components/logo-header';
-import { useRouter } from 'next/navigation';
 
-export default function Home() {
-  const router = useRouter();
+export default function Page() {
   const handleMock = () => console.debug('Mock');
   const valueMock = 'value';
 
-  if (true) router.push('/login');
   return (
     <div className="max-w-sm mx-auto align-middle mt-[100px]  p-5 rounded-xl z-10 bg-white shadow-lg shadow-secondary/50">
-      <LogoHeader text="Login" />
+      <LogoHeader text="Login 2" />
       <form onSubmit={handleMock}>
         <div className="relative py-3 sm:max-w-xl sm:mx-auto">
           <Input
