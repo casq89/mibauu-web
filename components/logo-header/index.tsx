@@ -12,7 +12,7 @@ export const LogoHeader = ({ text }: LogoHeaderProps) => {
         className="max-w-lg mx-auto align-middle"
         width={200}
         height={67}
-        src={'/logo_mibauu.jpeg'}
+        src={'/logo_mibauu.png'}
         alt="Logo e-talento"
         priority
       />

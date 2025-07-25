@@ -1,5 +1,5 @@
 import axios from 'axios';
 
 export const miBauuClient = axios.create({
-  baseURL: process.env.PUBLIC_BFF_URL,
+  baseURL: process.env.NEXT_PUBLIC_SUPABASE_URL,
 });

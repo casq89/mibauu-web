@@ -1,11 +1,13 @@
 'use client';
 
 import React, { ButtonHTMLAttributes } from 'react';
+import { Progress } from '../progress';
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   label: string;
   style?: string;
   level?: 'primary' | 'secondary';
+  isLoading?: boolean;
 };
 
 const levels = {
@@ -23,16 +25,18 @@ export const Button = ({
   label,
   style,
   level = 'primary',
+  isLoading,
   ...buttonProps
 }: ButtonProps) => {
   return (
     <div className="flex justify-center">
       <button
+        disabled={isLoading}
         type="submit"
-        className={`${levels[level].background} ${levels[level].hover} focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm w-full sm:w-auto px-5 py-2.5 text-center  ${style}`}
+        className={`${levels[level].background} ${levels[level].hover} focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm w-1/2 px-5 py-2.5 text-center  ${style}`}
         {...buttonProps}
       >
-        {label}
+        {!isLoading ? label : <Progress />}
       </button>
     </div>
   );
