@@ -4,7 +4,7 @@ import { useGetProducts } from '@/services/products/useGetProducts';
 import React from 'react';
 
 export default function Page() {
-  const { data: products, isLoading: isLoadingProducts } = useGetProducts();
+  const { data: products } = useGetProducts();
 
   return (
     <div>

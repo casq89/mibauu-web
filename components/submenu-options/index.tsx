@@ -14,7 +14,7 @@ export const SubMenuOptions = ({ isVisible }: SubMenuOptionsProps) => {
       <li>
         <Link
           href={'#'}
-          onClick={() => console.log('Some option')}
+          onClick={() => console.debug('Some option')}
           className="flex items-center w-full p-2 text-primary transition duration-75 rounded-lg pl-11 group hover:bg-green/70 hover:text-white"
         >
           Cambiar contraseña
@@ -23,7 +23,7 @@ export const SubMenuOptions = ({ isVisible }: SubMenuOptionsProps) => {
       <li>
         <Link
           href="#"
-          onClick={() => console.log('Some option')}
+          onClick={() => console.debug('Some option')}
           className="flex items-center w-full p-2 text-primary transition duration-75 rounded-lg pl-11 group hover:bg-green/70 hover:text-white"
         >
           Eliminar cuenta
