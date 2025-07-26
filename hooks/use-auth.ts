@@ -4,6 +4,9 @@ import { loginDefaultState } from '@/utils/validation-schema';
 import { handleError } from '@/utils/requests';
 import { supabaseClient } from '@/services/common/supabaseClient';
 import { useRouter } from 'next/navigation';
+import { AxiosResponse } from 'axios';
+
+type LoginResponse = AxiosResponse<{ token: string; user: { email: string } }>;
 
 export const useAuth = () => {
   const [isLoading, setIsLoading] = React.useState(false);
@@ -12,11 +15,15 @@ export const useAuth = () => {
   const login = async (data: typeof loginDefaultState) => {
     try {
       setIsLoading(true);
-      const response = await miBauuClient.post('/functions/v1/login', data);
+      const response = await miBauuClient.post<
+        typeof loginDefaultState,
+        LoginResponse
+      >('/functions/v1/login', data);
 
       if (response.data.token) {
-        const { token } = response.data;
+        const { token, user } = response.data;
         await localStorage.setItem('token', token);
+        await localStorage.setItem('user', JSON.stringify(user));
         setIsLoading(false);
         return true;
       }
@@ -32,6 +39,7 @@ export const useAuth = () => {
     try {
       await supabaseClient.auth.signOut();
       await localStorage.removeItem('token');
+      await localStorage.removeItem('user');
       router.push('/login');
     } catch (error) {
       return handleError(error);

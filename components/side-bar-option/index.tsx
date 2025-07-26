@@ -1,7 +1,7 @@
-"use client";
-import React from "react";
-import Link from "next/link";
-import { ChevronDownIcon } from "../side-icons";
+'use client';
+import React from 'react';
+import Link from 'next/link';
+import { ChevronDownIcon } from '../side-icons';
 
 type SideBarOptionProps = {
   title: string;
@@ -22,11 +22,11 @@ export const SideBarOption = ({
   subMenuComponent,
   isActive = false,
 }: SideBarOptionProps) => {
-  const styles = isActive ? "text-white bg-green" : "";
+  const styles = isActive ? 'text-white bg-green' : '';
   return (
     <li>
       <Link
-        className={`flex items-center justify-between p-2 text-gray-900 rounded-lg hover:text-white hover:bg-green group border-b-[1px] border-green/40 ${styles}`}
+        className={`flex items-center justify-between p-2 text-primary rounded-lg hover:text-white hover:bg-green group border-b-[1px] border-green/40 ${styles}`}
         href={href}
         onClick={onClick}
       >

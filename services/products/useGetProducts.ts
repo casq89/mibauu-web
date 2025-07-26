@@ -1,13 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { miBauuClient } from '../common/serviceBase';
-
-type Product = {
-  id: number;
-  name: string;
-  category_id: string;
-  price: number;
-  imagen_url: string;
-};
+import { Product } from '@/types/products';
+import { handleError } from '@/utils/requests';
 
 type Response = {
   data: Product[];
@@ -15,12 +9,20 @@ type Response = {
 
 const getProducts = async () => {
   try {
-    const response = await miBauuClient.get<Response>('/products');
+    const token = await localStorage.getItem('token');
+    const response = await miBauuClient.get<Response>(
+      '/functions/v1/products',
+      {
+        headers: {
+          Authorization: 'Bearer ' + token,
+        },
+      }
+    );
     const products = response.data.data;
 
     return products;
   } catch (error) {
-    console.error('Error fetching products:', error);
+    handleError(error);
   }
 };
 

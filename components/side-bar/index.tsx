@@ -4,9 +4,11 @@ import { useAuth } from '@/hooks/use-auth';
 import React from 'react';
 import {
   ExitIcon,
-  InitIcon,
+  OffersIcon,
   OptionsIcon,
-  PerosnalDataIcon,
+  UserIcon,
+  DocEditIcon,
+  StatsIcon,
 } from '../side-icons';
 import { SideBarOption } from '../side-bar-option';
 import { SubMenuOptions } from '../submenu-options';
@@ -34,13 +36,21 @@ export const SideBar = () => {
   };
 
   const SIDE_BAR_ICONS: SidebarIconsProps = {
-    Inicio: {
+    Productos: {
       href: '/dashboard',
-      component: <InitIcon />,
+      component: <StatsIcon />,
     },
-    'Datos personales': {
-      href: '/dashboard/personal-data',
-      component: <PerosnalDataIcon />,
+    Categorias: {
+      href: '/dashboard/categories',
+      component: <DocEditIcon />,
+    },
+    Promociones: {
+      href: '/dashboard/offers',
+      component: <OffersIcon />,
+    },
+    Consentimientos: {
+      href: '/dashboard/consents',
+      component: <UserIcon />,
     },
     Opciones: {
       href: '',

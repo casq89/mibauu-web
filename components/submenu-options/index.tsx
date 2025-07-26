@@ -13,8 +13,9 @@ export const SubMenuOptions = ({ isVisible }: SubMenuOptionsProps) => {
     >
       <li>
         <Link
-          href="/dashboard/change-password"
-          className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-green/70 hover:text-white"
+          href={'#'}
+          onClick={() => console.log('Some option')}
+          className="flex items-center w-full p-2 text-primary transition duration-75 rounded-lg pl-11 group hover:bg-green/70 hover:text-white"
         >
           Cambiar contraseña
         </Link>
@@ -23,7 +24,7 @@ export const SubMenuOptions = ({ isVisible }: SubMenuOptionsProps) => {
         <Link
           href="#"
           onClick={() => console.log('Some option')}
-          className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-green/70 hover:text-white"
+          className="flex items-center w-full p-2 text-primary transition duration-75 rounded-lg pl-11 group hover:bg-green/70 hover:text-white"
         >
           Eliminar cuenta
         </Link>
