@@ -6,8 +6,11 @@ export type Product = {
   price: number;
   stock: number;
   category_id: string;
-  promotion: number;
+  promotion: boolean;
   disccount: number;
   imagen_url: string;
+  category: {
+    name: string;
+  };
+  enable: boolean;
 };
-
