@@ -1,3 +1,5 @@
+import { SelectOptions } from './global';
+
 export type Product = {
   id: number;
   code: number;
@@ -9,8 +11,13 @@ export type Product = {
   promotion: boolean;
   disccount: number;
   imagen_url: string;
-  category: {
+  category?: {
     name: string;
   };
   enable: boolean;
+};
+
+export type CardProductProps = Omit<Product, 'name'> & {
+  productName: string;
+  categories: SelectOptions[];
 };

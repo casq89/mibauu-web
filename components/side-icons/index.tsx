@@ -98,9 +98,9 @@ export const ExitIcon = () => (
   </svg>
 );
 
-export const ChevronDownIcon = () => (
+export const ChevronDownIcon = ({ color = 'text-primary' }) => (
   <svg
-    className="flex-shrink-0 w-5 h-5 text-primary transition duration-75 group-hover:text-white"
+    className={`flex-shrink-0 w-5 h-5 ${color} transition duration-75 group-hover:text-white`}
     aria-hidden="true"
     xmlns="http://www.w3.org/2000/svg"
     fill="none"

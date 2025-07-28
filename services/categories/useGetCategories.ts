@@ -1,17 +1,17 @@
 import { useQuery } from '@tanstack/react-query';
 import { miBauuClient } from '../common/serviceBase';
-import { Product } from '@/types/products';
 import { handleError } from '@/utils/requests';
+import { Category } from '@/types/categories';
 
 type Response = {
-  data: Product[];
+  data: Category[];
 };
 
-const getProducts = async () => {
+const getCategories = async () => {
   try {
     const token = await localStorage.getItem('token');
     const response = await miBauuClient.get<Response>(
-      '/functions/v1/products',
+      '/functions/v1/categories',
       {
         headers: {
           Authorization: 'Bearer ' + token,
@@ -24,9 +24,9 @@ const getProducts = async () => {
   }
 };
 
-export const useGetProducts = () => {
+export const useGetCategories = () => {
   return useQuery({
-    queryKey: ['products'],
-    queryFn: getProducts,
+    queryKey: ['categories'],
+    queryFn: getCategories,
   });
 };

@@ -71,7 +71,7 @@ export const PencilIcon = () => (
     viewBox="0 0 24 24"
     strokeWidth={1.5}
     stroke="currentColor"
-    className={`flex-shrink-0 w-6 h-6 text-gray-500 cursor-pointer hover:text-green-500 transition duration-75`}
+    className={`flex-shrink-0 w-6 h-6 text-gray-400 cursor-pointer hover:text-green-500 transition duration-75`}
   >
     <path
       strokeLinecap="round"
