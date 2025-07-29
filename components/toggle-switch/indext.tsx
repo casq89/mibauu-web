@@ -7,7 +7,10 @@ type ToggleSwitchProps = {
 export const ToggleSwitch = ({ enabled, onToggle }: ToggleSwitchProps) => {
   return (
     <button
-      onClick={() => onToggle(!enabled)}
+      onClick={(e) => {
+        e.preventDefault();
+        onToggle(!enabled);
+      }}
       className={`relative inline-flex h-6 w-11  items-center rounded-full transition-colors ${
         enabled ? 'bg-green-500' : 'bg-gray-300'
       }`}

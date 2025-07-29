@@ -1,6 +1,6 @@
 'use client';
 import { CardProductProps } from '@/types/products';
-import React from 'react';
+import React, { useEffect } from 'react';
 import Image from 'next/image';
 import { ToggleSwitch } from '../toggle-switch/indext';
 import { Button } from '../button';
@@ -13,13 +13,32 @@ import { hasChanged } from '@/utils/objects';
 import { ThinInput } from '../thin-input';
 import { usePutProducts } from '@/services/products/usePutProducts';
 import { ThinSelect } from '../thin-select';
+import { useQueryClient } from '@tanstack/react-query';
+import { useDeleteProducts } from '@/services/products/useDeleteProduct';
 
 export const CardProduct = (product: CardProductProps) => {
   const { imagen_url, categories } = product;
   const [canUpdate, setCanUpdate] = React.useState(false);
   const defaultState = productDefaultState(product);
+  const queryClient = useQueryClient();
 
-  const { mutateAsync: updateProduct, isPending } = usePutProducts();
+  const {
+    mutateAsync: updateProduct,
+    isPending: isPendingUpdate,
+    isSuccess: isSuccessUpdate,
+  } = usePutProducts();
+  const {
+    mutateAsync: deleteProduct,
+    isPending: isPendingDelete,
+    isSuccess: isSuccessDelete,
+  } = useDeleteProducts();
+
+  const handleRemoveProduct = async (
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    e.preventDefault();
+    await deleteProduct(product.id);
+  };
 
   const formik = useFormik({
     initialValues: defaultState,
@@ -32,10 +51,18 @@ export const CardProduct = (product: CardProductProps) => {
     },
   });
 
+  useEffect(() => {
+    if (isSuccessUpdate || isSuccessDelete) {
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+    }
+  }, [isSuccessUpdate, isSuccessDelete]);
+
   React.useEffect(() => {
     const productHasChanged = hasChanged(defaultState, formik.values);
     setCanUpdate(productHasChanged);
-  }, [formik.values]);
+  }, [formik.values, product]);
+
+  const isDisabledSubmit = !canUpdate || isPendingUpdate || isPendingDelete;
 
   return (
     <div className="bg-white shadow-md rounded-2xl overflow-hidden border border-gray-200 pb-1">
@@ -123,10 +150,15 @@ export const CardProduct = (product: CardProductProps) => {
           <Button
             level={canUpdate ? 'success' : 'disabled'}
             label="Guardar"
-            disabled={!canUpdate || isPending}
-            isLoading={isPending}
+            disabled={isDisabledSubmit}
+            isLoading={isPendingUpdate}
           />
-          {/* <Button level="danger" label="Eliminar" /> */}
+          <Button
+            level="danger"
+            label="Eliminar"
+            isLoading={isPendingDelete}
+            onClick={handleRemoveProduct}
+          />
         </div>
       </form>
     </div>
