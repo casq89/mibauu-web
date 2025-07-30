@@ -15,12 +15,14 @@ import { usePutProducts } from '@/services/products/usePutProducts';
 import { ThinSelect } from '../thin-select';
 import { useQueryClient } from '@tanstack/react-query';
 import { useDeleteProducts } from '@/services/products/useDeleteProduct';
+import { useConfirmAlert } from '@/hooks/use-confirm-alert';
 
 export const CardProduct = (product: CardProductProps) => {
   const { imagen_url, categories } = product;
   const [canUpdate, setCanUpdate] = React.useState(false);
   const defaultState = productDefaultState(product);
   const queryClient = useQueryClient();
+  const { handleConfirmAlert } = useConfirmAlert();
 
   const {
     mutateAsync: updateProduct,
@@ -37,7 +39,13 @@ export const CardProduct = (product: CardProductProps) => {
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
     e.preventDefault();
-    await deleteProduct(product.id);
+    handleConfirmAlert({
+      title: 'Eliminar producto',
+      message: '¿Estas seguro que deseas eliminar este producto?',
+      onclick: async () => {
+        await deleteProduct(product.id);
+      },
+    });
   };
 
   const formik = useFormik({
@@ -65,20 +73,24 @@ export const CardProduct = (product: CardProductProps) => {
   const isDisabledSubmit = !canUpdate || isPendingUpdate || isPendingDelete;
 
   return (
-    <div className="bg-white shadow-md rounded-2xl overflow-hidden border border-gray-200 pb-1">
+    <div className="bg-white shadow-md rounded-2xl overflow-hidden border border-gray-200">
       <form onSubmit={formik.handleSubmit}>
-        <Image
-          className="max-w-lg mx-auto align-middle"
-          alt="product image"
-          width={200}
-          height={0}
-          src={imagen_url}
-        />
-        <div className="p-4 space-y-2">
+        <div className="h-50">
+          <Image
+            className="mx-auto"
+            alt="product image"
+            width={200}
+            height={0}
+            src={imagen_url}
+            priority
+          />
+        </div>
+        <div className="p-4 space-y-1">
           <ThinInput
             label="Nombre"
             id="productName"
             name="productName"
+            maxLength={100}
             onChange={formik.handleChange}
             value={formik.values.productName}
           />
@@ -86,6 +98,7 @@ export const CardProduct = (product: CardProductProps) => {
             label="Descripción"
             id="description"
             name="description"
+            maxLength={100}
             onChange={formik.handleChange}
             value={formik.values.description}
           />
@@ -94,6 +107,7 @@ export const CardProduct = (product: CardProductProps) => {
             id="code"
             name="code"
             type="number"
+            max="10000"
             onChange={formik.handleChange}
             value={formik.values.code}
           />
@@ -110,6 +124,7 @@ export const CardProduct = (product: CardProductProps) => {
             id="stock"
             name="stock"
             type="number"
+            max="10000"
             onChange={formik.handleChange}
             value={formik.values.stock}
           />
@@ -118,6 +133,7 @@ export const CardProduct = (product: CardProductProps) => {
             id="price"
             name="price"
             type="number"
+            max="100000000"
             onChange={formik.handleChange}
             value={formik.values.price}
           />
@@ -146,7 +162,7 @@ export const CardProduct = (product: CardProductProps) => {
             />
           </div>
         </div>
-        <div className="flex justify-around">
+        <div className="flex justify-around mb-2">
           <Button
             level={canUpdate ? 'success' : 'disabled'}
             label="Guardar"

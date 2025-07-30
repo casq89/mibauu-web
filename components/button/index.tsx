@@ -16,8 +16,8 @@ const levels = {
     hover: 'hover:bg-primary/80',
   },
   secondary: {
-    background: 'bg-gray-300 text-slate-500',
-    hover: 'hover:bg-gray-300/80',
+    background: 'bg-secondary text-primary',
+    hover: 'hover:bg-secondary/80',
   },
   disabled: {
     background: 'bg-gray-300 text-slate-500',

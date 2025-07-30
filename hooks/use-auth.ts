@@ -41,6 +41,7 @@ export const useAuth = () => {
       await localStorage.removeItem('token');
       await localStorage.removeItem('user');
       router.push('/login');
+      return true;
     } catch (error) {
       return handleError(error);
     }

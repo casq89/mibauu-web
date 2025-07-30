@@ -21,6 +21,7 @@ const getProducts = async () => {
     return response.data.data;
   } catch (error) {
     handleError(error);
+    return [];
   }
 };
 

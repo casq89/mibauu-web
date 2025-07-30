@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 import './globals.css';
 import { Toast } from '@/components/toast';
 

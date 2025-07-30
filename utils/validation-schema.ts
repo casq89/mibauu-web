@@ -51,8 +51,32 @@ export const productValidationSchema = Yup.object({
   price: Yup.number(),
   stock: Yup.number(),
   promotion: Yup.boolean(),
-  disccoiunt: Yup.number(),
+  disccount: Yup.number(),
   enable: Yup.boolean(),
   image_url: Yup.string(),
   category_id: Yup.number(),
 });
+
+export const createProductValidationSchema = Yup.object({
+  code: Yup.number().required(),
+  productName: Yup.string().required('El nombre del producto es requerido'),
+  description: Yup.string().required('La descripción es requerida'),
+  price: Yup.number().required('El precio es requerido'),
+  stock: Yup.number().required('La cantidad es requerida'),
+  promotion: Yup.boolean(),
+  disccount: Yup.number(),
+  enable: Yup.boolean().required(),
+  category_id: Yup.number().required('La categoría es requerida'),
+});
+
+export const createProductDefaultState = {
+  code: '',
+  productName: '',
+  description: '',
+  price: '',
+  stock: '',
+  promotion: false,
+  disccount: '',
+  enable: true,
+  category_id: '',
+};
