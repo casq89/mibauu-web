@@ -5,11 +5,17 @@ import { Checkbox } from '@/components/checkbox';
 import { Input } from '@/components/input';
 import { Select } from '@/components/select';
 import { SelectOptions } from '@/types/global';
+import { toast } from 'react-toastify';
+
 import {
   createProductDefaultState,
   createProductValidationSchema,
 } from '@/utils/validation-schema';
 import { useFormik } from 'formik';
+import { ProductImage } from '../product-image';
+import React from 'react';
+import { MAX_FILE_SIZE, VALID_TYPES_PHOTO } from '@/constants/global';
+import { usePostProducts } from '@/services/products/usePostProducts';
 
 type ProductModalProps = {
   isOpen: boolean;
@@ -24,26 +30,68 @@ type ProductForm = {
   price: number;
 };
 
-const handleUploadImage = () => document?.getElementById('file')?.click();
-
 export default function ProductModal({
   isOpen,
   onClose,
   categoryOptions,
 }: ProductModalProps) {
+  const [imageSrc, setImageSrc] = React.useState('');
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+  const { mutateAsync: createProduct, isPending: isPendingProduct } =
+    usePostProducts();
+
   const formik = useFormik({
     initialValues: createProductDefaultState,
     validationSchema: createProductValidationSchema,
     onSubmit: async (formData) => {
-      console.log(formData);
+      if (!formData.image) {
+        toast.error('Debes seleccionar una imagen para el producto');
+        return;
+      }
+      const [newProduct] = await createProduct(formData);
+      if (newProduct.id) {
+        onClose();
+      }
     },
   });
+
+  const handleUploadImage = () => {
+    fileInputRef.current?.click();
+  };
 
   const handleClose = (
     e: React.MouseEvent<HTMLButtonElement | HTMLDivElement>
   ) => {
     e.preventDefault();
     onClose();
+  };
+
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (!event.target?.files?.length) return;
+
+    const file = event.target.files[0];
+
+    if (file) {
+      if (!VALID_TYPES_PHOTO.includes(file.type)) {
+        toast.error(
+          'Formato de archivo no válido. Por favor, suba una imagen .jpeg, .jpg, .png o .webp.'
+        );
+        return;
+      }
+
+      if (file.size > MAX_FILE_SIZE) {
+        toast.error(
+          'El archivo es demasiado grande. El tamaño máximo permitido es de 2 MB.'
+        );
+        return;
+      }
+      formik.setFieldValue('image', file);
+      const tempUrl = URL.createObjectURL(file);
+      setImageSrc(tempUrl);
+    }
   };
 
   if (!isOpen) return null;
@@ -54,27 +102,22 @@ export default function ProductModal({
         <h2 className="text-xl text-secondary text-center mb-4">
           Crear Producto
         </h2>
-        <form onSubmit={() => console.log} className="space-y-4">
+        <form
+          id="upload-form"
+          className="space-y-4"
+          onSubmit={formik.handleSubmit}
+        >
           <input
             type="file"
-            id="file"
-            name="file"
+            id="image"
+            name="image"
             accept=".jpeg, .jpg, .png, .webp"
             className="hidden"
-            onChange={console.log}
+            ref={fileInputRef}
+            onChange={handleFileChange}
           />
           <span onClick={handleUploadImage}>
-            <img
-              src="data:image/svg+xml;utf8,
-                <svg xmlns='http://www.w3.org/2000/svg' width='100' height='50' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'>
-                    <rect x='3' y='3' width='18' height='18' rx='2' ry='2'></rect>
-                    <path d='M3 16l5-5a2 2 0 0 1 2.8 0l7.2 7'></path>
-                    <path d='M14 14l1-1a2 2 0 0 1 2.8 0L21 16'></path>
-                    <circle cx='7.5' cy='7.5' r='1.5'></circle>
-                </svg>"
-              alt="Imagen no disponible"
-              className="h-50 mx-auto mb-2"
-            />
+            <ProductImage imageSrc={imageSrc} />
           </span>
           <Input
             label="Nombre"
@@ -156,7 +199,7 @@ export default function ProductModal({
             />
           </div>
           <div className="flex justify-around mb-2">
-            <Button label="Guardar" />
+            <Button label="Guardar" isLoading={isPendingProduct} />
             <Button level="secondary" label="Cerrar" onClick={handleClose} />
           </div>
         </form>

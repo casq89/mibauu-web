@@ -59,6 +59,7 @@ export const productValidationSchema = Yup.object({
 
 export const createProductValidationSchema = Yup.object({
   code: Yup.number().required(),
+  image: Yup.string().nullable(),
   productName: Yup.string().required('El nombre del producto es requerido'),
   description: Yup.string().required('La descripción es requerida'),
   price: Yup.number().required('El precio es requerido'),
@@ -71,6 +72,7 @@ export const createProductValidationSchema = Yup.object({
 
 export const createProductDefaultState = {
   code: '',
+  image: '',
   productName: '',
   description: '',
   price: '',

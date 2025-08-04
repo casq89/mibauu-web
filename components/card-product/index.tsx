@@ -63,12 +63,12 @@ export const CardProduct = (product: CardProductProps) => {
     if (isSuccessUpdate || isSuccessDelete) {
       queryClient.invalidateQueries({ queryKey: ['products'] });
     }
-  }, [isSuccessUpdate, isSuccessDelete]);
+  }, [isSuccessUpdate, isSuccessDelete, queryClient]);
 
   React.useEffect(() => {
     const productHasChanged = hasChanged(defaultState, formik.values);
     setCanUpdate(productHasChanged);
-  }, [formik.values, product]);
+  }, [formik.values, product, defaultState]);
 
   const isDisabledSubmit = !canUpdate || isPendingUpdate || isPendingDelete;
 

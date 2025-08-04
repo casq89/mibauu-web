@@ -37,7 +37,7 @@ export default function Page() {
         categoryOptions={categoryOptions}
         isOpen={isOpenModal}
         onClose={showProductModal}
-        onCreate={() => console.log}
+        onCreate={() => console.debug}
       />
     </div>
   );
