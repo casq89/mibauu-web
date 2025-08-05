@@ -1,6 +1,6 @@
 'use client';
 import { CardProductProps } from '@/types/products';
-import React, { useEffect } from 'react';
+import React from 'react';
 import Image from 'next/image';
 import { ToggleSwitch } from '../toggle-switch/indext';
 import { Button } from '../button';
@@ -13,27 +13,26 @@ import { hasChanged } from '@/utils/objects';
 import { ThinInput } from '../thin-input';
 import { usePutProducts } from '@/services/products/usePutProducts';
 import { ThinSelect } from '../thin-select';
-import { useQueryClient } from '@tanstack/react-query';
 import { useDeleteProducts } from '@/services/products/useDeleteProduct';
 import { useConfirmAlert } from '@/hooks/use-confirm-alert';
+import { useProductStore } from '@/stores/products';
+import { MAX_FILE_SIZE, VALID_TYPES_PHOTO } from '@/constants/global';
+import { toast } from 'react-toastify';
 
 export const CardProduct = (product: CardProductProps) => {
   const { imagen_url, categories } = product;
   const [canUpdate, setCanUpdate] = React.useState(false);
+  const [imageSrc, setImageSrc] = React.useState(imagen_url);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
   const defaultState = productDefaultState(product);
-  const queryClient = useQueryClient();
   const { handleConfirmAlert } = useConfirmAlert();
+  const deleteProductState = useProductStore((state) => state.deleteProduct);
+  const updateProductState = useProductStore((state) => state.updateProduct);
 
-  const {
-    mutateAsync: updateProduct,
-    isPending: isPendingUpdate,
-    isSuccess: isSuccessUpdate,
-  } = usePutProducts();
-  const {
-    mutateAsync: deleteProduct,
-    isPending: isPendingDelete,
-    isSuccess: isSuccessDelete,
-  } = useDeleteProducts();
+  const { mutateAsync: updateProduct, isPending: isPendingUpdate } =
+    usePutProducts();
+  const { mutateAsync: deleteProduct, isPending: isPendingDelete } =
+    useDeleteProducts();
 
   const handleRemoveProduct = async (
     e: React.MouseEvent<HTMLButtonElement>
@@ -43,7 +42,10 @@ export const CardProduct = (product: CardProductProps) => {
       title: 'Eliminar producto',
       message: '¿Estas seguro que deseas eliminar este producto?',
       onclick: async () => {
-        await deleteProduct(product.id);
+        const response = await deleteProduct(product.id);
+        if (response.success === true) {
+          deleteProductState(product.id);
+        }
       },
     });
   };
@@ -51,38 +53,74 @@ export const CardProduct = (product: CardProductProps) => {
   const formik = useFormik({
     initialValues: defaultState,
     validationSchema: productValidationSchema,
-    onSubmit: async ({ productName, ...restProduct }) => {
-      await updateProduct({
-        ...restProduct,
-        name: productName,
-      });
+    onSubmit: async (productFormData) => {
+      const [product] = await updateProduct(productFormData);
+      if (product.id) {
+        updateProductState(product);
+      }
     },
   });
-
-  useEffect(() => {
-    if (isSuccessUpdate || isSuccessDelete) {
-      queryClient.invalidateQueries({ queryKey: ['products'] });
-    }
-  }, [isSuccessUpdate, isSuccessDelete, queryClient]);
 
   React.useEffect(() => {
     const productHasChanged = hasChanged(defaultState, formik.values);
     setCanUpdate(productHasChanged);
   }, [formik.values, product, defaultState]);
 
+  const handleUploadImage = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (!event.target?.files?.length) return;
+
+    const file = event.target.files[0];
+
+    if (file) {
+      if (!VALID_TYPES_PHOTO.includes(file.type)) {
+        toast.error(
+          'Formato de archivo no válido. Por favor, suba una imagen .jpeg, .jpg, .png o .webp.'
+        );
+        return;
+      }
+
+      if (file.size > MAX_FILE_SIZE) {
+        toast.error(
+          'El archivo es demasiado grande. El tamaño máximo permitido es de 2 MB.'
+        );
+        return;
+      }
+      formik.setFieldValue('image', file);
+      const tempUrl = URL.createObjectURL(file);
+      setImageSrc(tempUrl);
+    }
+  };
+
   const isDisabledSubmit = !canUpdate || isPendingUpdate || isPendingDelete;
 
   return (
     <div className="bg-white shadow-md rounded-2xl overflow-hidden border border-gray-200">
       <form onSubmit={formik.handleSubmit}>
-        <div className="h-50">
-          <Image
-            className="mx-auto"
-            alt="product image"
-            width={200}
-            height={0}
-            src={imagen_url}
-            priority
+        <div className="h-50 cursor-pointer hover:opacity-80">
+          <span onClick={handleUploadImage}>
+            <Image
+              className="mx-auto"
+              alt="product image"
+              width={200}
+              height={0}
+              src={imageSrc}
+              priority
+            />
+          </span>
+          <input
+            type="file"
+            id="image"
+            name="image"
+            accept=".jpeg, .jpg, .png, .webp"
+            className="hidden"
+            ref={fileInputRef}
+            onChange={handleFileChange}
           />
         </div>
         <div className="p-4 space-y-1">
@@ -129,7 +167,7 @@ export const CardProduct = (product: CardProductProps) => {
             value={formik.values.stock}
           />
           <ThinInput
-            label="Precio"
+            label="Precio $"
             id="price"
             name="price"
             type="number"

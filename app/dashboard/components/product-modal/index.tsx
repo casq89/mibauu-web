@@ -16,6 +16,7 @@ import { ProductImage } from '../product-image';
 import React from 'react';
 import { MAX_FILE_SIZE, VALID_TYPES_PHOTO } from '@/constants/global';
 import { usePostProducts } from '@/services/products/usePostProducts';
+import { useProductStore } from '@/stores/products';
 
 type ProductModalProps = {
   isOpen: boolean;
@@ -40,6 +41,7 @@ export default function ProductModal({
 
   const { mutateAsync: createProduct, isPending: isPendingProduct } =
     usePostProducts();
+  const addProductState = useProductStore((state) => state.addProduct);
 
   const formik = useFormik({
     initialValues: createProductDefaultState,
@@ -51,6 +53,7 @@ export default function ProductModal({
       }
       const [newProduct] = await createProduct(formData);
       if (newProduct.id) {
+        addProductState(newProduct);
         onClose();
       }
     },

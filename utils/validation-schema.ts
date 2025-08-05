@@ -1,4 +1,8 @@
-import { CardProductProps } from '@/types/products';
+import {
+  CardProductProps,
+  Product,
+  ProductDefaultState,
+} from '@/types/products';
 import * as Yup from 'yup';
 
 const emailValidation = Yup.string()
@@ -27,9 +31,10 @@ export const productDefaultState = ({
   enable,
   imagen_url,
   category_id,
-}: CardProductProps) => {
+}: CardProductProps): ProductDefaultState => {
   return {
     id,
+    image: '',
     code,
     productName,
     description,
@@ -45,6 +50,7 @@ export const productDefaultState = ({
 
 export const productValidationSchema = Yup.object({
   id: Yup.number(),
+  image: Yup.string().nullable(),
   code: Yup.number(),
   productName: Yup.string(),
   description: Yup.string(),

@@ -7,11 +7,25 @@ import { useGetProducts } from '@/services/products/useGetProducts';
 import { getSelectOptions } from '@/utils/categories';
 import React from 'react';
 import ProductModal from './components/product-modal';
+import { useProductStore } from '@/stores/products';
+import { ProductCardSkeleton } from './components/product-skeleton';
 
 export default function Page() {
   const [isOpenModal, setIsOpenModal] = React.useState(false);
-  const { data: products = [] } = useGetProducts();
+  const {
+    data: products = [],
+    isSuccess,
+    isLoading: isLoadingProducts,
+  } = useGetProducts();
   const { data: categories = [] } = useGetCategories();
+  const loadProducts = useProductStore((state) => state.loadProducts);
+
+  React.useEffect(() => {
+    if (isSuccess && products) {
+      loadProducts(products);
+    }
+  }, [isSuccess, products, loadProducts]);
+  const productList = useProductStore((state) => state.products);
 
   const categoryOptions = getSelectOptions(categories);
 
@@ -24,7 +38,8 @@ export default function Page() {
         <Button label="Crear producto" onClick={showProductModal} />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-8">
-        {products?.map(({ name, ...product }) => (
+        {isLoadingProducts ? <ProductCardSkeleton /> : null}
+        {productList?.map(({ name, ...product }) => (
           <CardProduct
             key={product.id}
             productName={name}
