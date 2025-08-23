@@ -1,20 +1,20 @@
 import { useMutation } from '@tanstack/react-query';
 import { miBauuClient } from '../common/serviceBase';
-import { Product, ProductDefaultState } from '@/types/products';
 import { handleError } from '@/utils/requests';
 import { toast } from 'react-toastify';
-import { generateFormRequest } from '@/utils/products';
+import { Offer, OfferDefaultState } from '@/types/Offers';
+import { generateFormOfferRequest } from '@/utils/offers';
 
 type Response = {
-  data: Product[];
+  data: Offer[];
 };
 
-const putProducts = async ({ id, ...restProduct }: ProductDefaultState) => {
+const putOffers = async ({ id, ...restOffer }: OfferDefaultState) => {
   try {
-    const formData = generateFormRequest({ id, ...restProduct });
+    const formData = generateFormOfferRequest({ id, ...restOffer });
     const token = await localStorage.getItem('token');
     const response = await miBauuClient.put<Response>(
-      `/functions/v1/products/${id}`,
+      `/functions/v1/offers`,
       formData,
       {
         headers: {
@@ -22,7 +22,7 @@ const putProducts = async ({ id, ...restProduct }: ProductDefaultState) => {
         },
       }
     );
-    toast.success('Producto actualizado correctamente');
+    toast.success('Promoción añadida correctamente');
     return response.data.data;
   } catch (error) {
     handleError(error);
@@ -30,9 +30,9 @@ const putProducts = async ({ id, ...restProduct }: ProductDefaultState) => {
   }
 };
 
-export const usePutProducts = () => {
+export const usePutOffers = () => {
   return useMutation({
-    mutationKey: ['put_products'],
-    mutationFn: (product: ProductDefaultState) => putProducts(product),
+    mutationKey: ['put_offers'],
+    mutationFn: (offer: OfferDefaultState) => putOffers(offer),
   });
 };

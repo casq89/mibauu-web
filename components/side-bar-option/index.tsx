@@ -22,7 +22,8 @@ export const SideBarOption = ({
   subMenuComponent,
   isActive = false,
 }: SideBarOptionProps) => {
-  const styles = isActive ? 'text-white bg-green' : '';
+  const styles = isActive ? 'bg-gray-800' : '';
+
   return (
     <li>
       <Link

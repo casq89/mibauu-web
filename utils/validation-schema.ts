@@ -88,3 +88,35 @@ export const createProductDefaultState = {
   enable: true,
   category_id: '',
 };
+
+export const createCategoryValidationSchema = Yup.object({
+  id: Yup.number(),
+  categoryName: Yup.string(),
+  description: Yup.string(),
+  enable: Yup.string(),
+});
+
+export const createCategoryDefatulState = {
+  id: '',
+  categoryName: '',
+  description: '',
+  enable: 'true',
+};
+
+export const createOfferValidationSchema = Yup.object({
+  id: Yup.number(),
+  offerName: Yup.string(),
+  description: Yup.string(),
+  enable: Yup.string(),
+  image: Yup.string(),
+  price: Yup.number(),
+});
+
+export const createOfferDefatulState = {
+  id: '',
+  offerName: '',
+  description: '',
+  image: '',
+  price: 0,
+  enable: 'true',
+};

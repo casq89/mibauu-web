@@ -25,6 +25,7 @@ type SidebarIconsProps = {
 
 export const SideBar = () => {
   const [isVisibleOptions, seIsVisibleOptions] = React.useState(false);
+  const [isActiveLink, setIsActiveLink] = React.useState(0);
   const { logout } = useAuth();
 
   const handleOptions = (
@@ -32,6 +33,7 @@ export const SideBar = () => {
   ) => {
     event.preventDefault();
     event.stopPropagation();
+    setIsActiveLink(4);
     seIsVisibleOptions(!isVisibleOptions);
   };
 
@@ -39,18 +41,22 @@ export const SideBar = () => {
     Productos: {
       href: '/dashboard',
       component: <StatsIcon />,
+      onClick: () => setIsActiveLink(0),
     },
     Categorias: {
       href: '/dashboard/categories',
       component: <DocEditIcon />,
+      onClick: () => setIsActiveLink(1),
     },
     Promociones: {
       href: '/dashboard/offers',
       component: <OffersIcon />,
+      onClick: () => setIsActiveLink(2),
     },
     Consentimientos: {
       href: '/dashboard/consents',
       component: <UserIcon />,
+      onClick: () => setIsActiveLink(3),
     },
     Opciones: {
       href: '',
@@ -74,14 +80,15 @@ export const SideBar = () => {
       <div className="h-full px-3 py-4 overflow-y-auto">
         <ul className="space-y-2 font-medium">
           {Object.entries(SIDE_BAR_ICONS).map(
-            ([
-              key,
-              { href, component, onClick, isAcordion, subMenuComponent },
-            ]) => (
+            (
+              [key, { href, component, onClick, isAcordion, subMenuComponent }],
+              index
+            ) => (
               <SideBarOption
                 key={key}
                 title={key}
                 href={href}
+                isActive={isActiveLink === index}
                 onClick={onClick}
                 isAcordion={isAcordion}
                 subMenuComponent={subMenuComponent}

@@ -1,21 +1,21 @@
 import { useMutation } from '@tanstack/react-query';
 import { miBauuClient } from '../common/serviceBase';
-import { Product } from '@/types/products';
 import { handleError } from '@/utils/requests';
 import { toast } from 'react-toastify';
-import { createProductDefaultState } from '@/utils/validation-schema';
-import { generateFormRequest } from '@/utils/products';
+import { createOfferDefatulState } from '@/utils/validation-schema';
+import { Offer } from '@/types/Offers';
+import { generateFormOfferRequest } from '@/utils/offers';
 
 type Response = {
-  data: Product[];
+  data: Offer[];
 };
 
-const postProducts = async (product: typeof createProductDefaultState) => {
+const postOffers = async (offer: typeof createOfferDefatulState) => {
   try {
-    const formData = generateFormRequest(product);
+    const formData = generateFormOfferRequest(offer);
     const token = await localStorage.getItem('token');
     const response = await miBauuClient.post<Response>(
-      `/functions/v1/products`,
+      `/functions/v1/offers`,
       formData,
       {
         headers: {
@@ -23,7 +23,7 @@ const postProducts = async (product: typeof createProductDefaultState) => {
         },
       }
     );
-    toast.success('Producto añadido correctamente');
+    toast.success('Promoción añadida correctamente');
     return response.data.data;
   } catch (error) {
     handleError(error);
@@ -31,10 +31,9 @@ const postProducts = async (product: typeof createProductDefaultState) => {
   }
 };
 
-export const usePostProducts = () => {
+export const usePostOffers = () => {
   return useMutation({
-    mutationKey: ['post_products'],
-    mutationFn: (product: typeof createProductDefaultState) =>
-      postProducts(product),
+    mutationKey: ['post_offers'],
+    mutationFn: (offer: typeof createOfferDefatulState) => postOffers(offer),
   });
 };

@@ -2,16 +2,16 @@ import React from 'react';
 
 type ToggleSwitchProps = {
   enabled: boolean;
-  onToggle: (enabled: boolean) => void;
+  onToggle?: (enabled: boolean) => void;
 };
 export const ToggleSwitch = ({ enabled, onToggle }: ToggleSwitchProps) => {
   return (
     <button
       onClick={(e) => {
         e.preventDefault();
-        onToggle(!enabled);
+        if (onToggle) onToggle(!enabled);
       }}
-      className={`relative inline-flex h-6 w-11  items-center rounded-full transition-colors ${
+      className={`relative inline-flex h-6 w-11  items-center rounded-full transition-colors cursor-pointer ${
         enabled ? 'bg-green-500' : 'bg-gray-300'
       }`}
     >

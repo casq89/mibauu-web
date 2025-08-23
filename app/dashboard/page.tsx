@@ -14,17 +14,18 @@ export default function Page() {
   const [isOpenModal, setIsOpenModal] = React.useState(false);
   const {
     data: products = [],
-    isSuccess,
+    isSuccess: isSuccessProducts,
     isLoading: isLoadingProducts,
   } = useGetProducts();
   const { data: categories = [] } = useGetCategories();
   const loadProducts = useProductStore((state) => state.loadProducts);
 
   React.useEffect(() => {
-    if (isSuccess && products) {
+    if (isSuccessProducts && products) {
       loadProducts(products);
     }
-  }, [isSuccess, products, loadProducts]);
+  }, [isSuccessProducts, products, loadProducts]);
+
   const productList = useProductStore((state) => state.products);
 
   const categoryOptions = getSelectOptions(categories);
@@ -52,7 +53,6 @@ export default function Page() {
         categoryOptions={categoryOptions}
         isOpen={isOpenModal}
         onClose={showProductModal}
-        onCreate={() => console.debug}
       />
     </div>
   );

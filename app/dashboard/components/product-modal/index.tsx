@@ -22,13 +22,6 @@ type ProductModalProps = {
   isOpen: boolean;
   categoryOptions: SelectOptions[];
   onClose: () => void;
-  onCreate: (product: ProductForm) => void;
-};
-
-type ProductForm = {
-  name: string;
-  description: string;
-  price: number;
 };
 
 export default function ProductModal({
@@ -54,6 +47,7 @@ export default function ProductModal({
       const [newProduct] = await createProduct(formData);
       if (newProduct.id) {
         addProductState(newProduct);
+        formik.resetForm();
         onClose();
       }
     },
