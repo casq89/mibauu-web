@@ -4,6 +4,7 @@ export type Offer = {
   description: string;
   image: string;
   price: number;
+  enable: boolean;
 };
 
 export type OfferDefaultState = {
@@ -13,4 +14,8 @@ export type OfferDefaultState = {
   description: string;
   price: number;
   enable: boolean;
+};
+
+export type CardOfferProps = Omit<Offer, 'name'> & {
+  offerName: string;
 };

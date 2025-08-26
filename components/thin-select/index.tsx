@@ -9,7 +9,7 @@ type ThinSelectProps = {
 
 export const ThinSelect = ({
   label,
-  options,
+  options=[],
   ...restProps
 }: ThinSelectProps) => {
   const selectRef = React.useRef<HTMLSelectElement>(null);

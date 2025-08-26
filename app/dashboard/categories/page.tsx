@@ -28,7 +28,7 @@ export default function Page() {
     if (isSuccessCategories && categories) {
       loadCategories(categories);
     }
-  }, [isSuccessCategories, loadCategories]);
+  }, [isSuccessCategories, loadCategories, categories]);
 
   const categoriesList = useCategoryStore((state) => state.categories);
 

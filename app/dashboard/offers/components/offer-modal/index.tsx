@@ -1,52 +1,44 @@
 'use client';
 
 import { Button } from '@/components/button';
-import { Checkbox } from '@/components/checkbox';
 import { Input } from '@/components/input';
-import { Select } from '@/components/select';
-import { SelectOptions } from '@/types/global';
 import { toast } from 'react-toastify';
 
 import {
-  createProductDefaultState,
-  createProductValidationSchema,
+  createOfferDefatulState,
+  createOfferValidationSchema,
 } from '@/utils/validation-schema';
 import { useFormik } from 'formik';
 import React from 'react';
 import { MAX_FILE_SIZE, VALID_TYPES_PHOTO } from '@/constants/global';
-import { usePostProducts } from '@/services/products/usePostProducts';
-import { useProductStore } from '@/stores/products';
 import { DefaultImage } from '@/components/default-image';
+import { usePostOffers } from '@/services/offers/usePostOffers';
+import { useOfferStore } from '@/stores/offers';
 
 type ProductModalProps = {
   isOpen: boolean;
-  categoryOptions: SelectOptions[];
   onClose: () => void;
 };
 
-export default function ProductModal({
-  isOpen,
-  onClose,
-  categoryOptions,
-}: ProductModalProps) {
+export default function OfferModal({ isOpen, onClose }: ProductModalProps) {
   const [imageSrc, setImageSrc] = React.useState('');
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
-  const { mutateAsync: createProduct, isPending: isPendingProduct } =
-    usePostProducts();
-  const addProductState = useProductStore((state) => state.addProduct);
+  const { mutateAsync: createOffer, isPending: isPendingOffer } =
+    usePostOffers();
+  const addOfferState = useOfferStore((state) => state.addOffer);
 
   const formik = useFormik({
-    initialValues: createProductDefaultState,
-    validationSchema: createProductValidationSchema,
+    initialValues: createOfferDefatulState,
+    validationSchema: createOfferValidationSchema,
     onSubmit: async (formData) => {
       if (!formData.image) {
-        toast.error('Debes seleccionar una imagen para el producto');
+        toast.error('Debes seleccionar una imagen para la promoción');
         return;
       }
-      const [newProduct] = await createProduct(formData);
-      if (newProduct.id) {
-        addProductState(newProduct);
+      const [newOffer] = await createOffer(formData);
+      if (newOffer.id) {
+        addOfferState(newOffer);
         formik.resetForm();
         onClose();
       }
@@ -97,7 +89,7 @@ export default function ProductModal({
     <div className="fixed inset-0 z-50  bg-black/60 flex items-center justify-center">
       <div className="bg-white  mx-auto rounded-xl shadow-lg p-6">
         <h2 className="text-xl text-secondary text-center mb-4">
-          Crear Producto
+          Crear Promoción
         </h2>
         <form
           id="upload-form"
@@ -118,11 +110,11 @@ export default function ProductModal({
           </span>
           <Input
             label="Nombre"
-            name="productName"
-            id="productName"
+            name="offerName"
+            id="offerName"
             onChange={formik.handleChange}
-            value={formik.values.productName}
-            error={formik.errors.productName}
+            value={formik.values.offerName}
+            error={formik.errors.offerName}
           />
           <Input
             label="Descripción"
@@ -132,36 +124,7 @@ export default function ProductModal({
             value={formik.values.description}
             error={formik.errors.description}
           />
-          <div>
-            <Select
-              label="Categorías"
-              id="category_id"
-              name="category_id"
-              options={categoryOptions}
-              onChange={formik.handleChange}
-              value={formik.values.category_id}
-              error={formik.errors.category_id}
-            />
-          </div>
           <div className="flex gap-2">
-            <Input
-              label="Código"
-              name="code"
-              id="code"
-              type="number"
-              onChange={formik.handleChange}
-              value={formik.values.code}
-              error={formik.errors.code}
-            />
-            <Input
-              label="Cantidad"
-              name="stock"
-              id="stock"
-              type="number"
-              onChange={formik.handleChange}
-              value={formik.values.stock}
-              error={formik.errors.stock}
-            />
             <Input
               label="Precio"
               name="price"
@@ -171,32 +134,9 @@ export default function ProductModal({
               value={formik.values.price}
               error={formik.errors.price}
             />
-            <Input
-              label="Descuento"
-              name="disccount"
-              id="disccount"
-              onChange={formik.handleChange}
-              value={formik.values.disccount}
-              error={formik.errors.disccount}
-            />
-          </div>
-          <div className="flex items-center">
-            <Checkbox
-              id="promotion"
-              name="promotion"
-              type="checkbox"
-              onChange={formik.handleChange}
-              value={formik.values.promotion ? 1 : 0}
-              error={formik.errors.promotion}
-              htmlElement={
-                <label className="text-gray-500">
-                  ¿Deseas checkear este producto como promoción?
-                </label>
-              }
-            />
           </div>
           <div className="flex justify-around mb-2">
-            <Button label="Guardar" isLoading={isPendingProduct} />
+            <Button label="Guardar" isLoading={isPendingOffer} />
             <Button level="secondary" label="Cerrar" onClick={handleClose} />
           </div>
         </form>

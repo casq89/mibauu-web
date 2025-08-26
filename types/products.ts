@@ -19,7 +19,7 @@ export type Product = {
 
 export type CardProductProps = Omit<Product, 'name'> & {
   productName: string;
-  categories: SelectOptions[];
+  categories?: SelectOptions[] ;
 };
 
 export type ProductDefaultState = {

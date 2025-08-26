@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 
-type ProductImageProps = {
+type DefaultImageProps = {
   imageSrc: string;
 };
 
@@ -13,7 +13,7 @@ const defaultSrc = `data:image/svg+xml;utf8,
                             <circle cx='7.5' cy='7.5' r='1.5'></circle>
                         </svg>`;
 
-export const ProductImage = ({ imageSrc }: ProductImageProps) => {
+export const DefaultImage = ({ imageSrc }: DefaultImageProps) => {
   return (
     <Image
       width={200}

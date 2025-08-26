@@ -1,8 +1,5 @@
-import {
-  CardProductProps,
-  Product,
-  ProductDefaultState,
-} from '@/types/products';
+import { CardOfferProps, OfferDefaultState } from '@/types/Offers';
+import { CardProductProps, ProductDefaultState } from '@/types/products';
 import * as Yup from 'yup';
 
 const emailValidation = Yup.string()
@@ -112,6 +109,15 @@ export const createOfferValidationSchema = Yup.object({
   price: Yup.number(),
 });
 
+export const offerValidationSchema = Yup.object({
+  id: Yup.number(),
+  image: Yup.string().nullable(),
+  productName: Yup.string(),
+  description: Yup.string(),
+  price: Yup.number(),
+  enable: Yup.boolean(),
+});
+
 export const createOfferDefatulState = {
   id: '',
   offerName: '',
@@ -119,4 +125,21 @@ export const createOfferDefatulState = {
   image: '',
   price: 0,
   enable: 'true',
+};
+
+export const offerDefaultState = ({
+  id,
+  offerName,
+  description,
+  price,
+  enable,
+}: CardOfferProps): OfferDefaultState => {
+  return {
+    id,
+    image: '',
+    offerName,
+    description,
+    price,
+    enable,
+  };
 };

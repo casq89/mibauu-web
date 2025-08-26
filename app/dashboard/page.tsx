@@ -8,7 +8,7 @@ import { getSelectOptions } from '@/utils/categories';
 import React from 'react';
 import ProductModal from './components/product-modal';
 import { useProductStore } from '@/stores/products';
-import { ProductCardSkeleton } from './components/product-skeleton';
+import { CardSkeleton } from '@/components/card-skeleton';
 
 export default function Page() {
   const [isOpenModal, setIsOpenModal] = React.useState(false);
@@ -39,7 +39,7 @@ export default function Page() {
         <Button label="Crear producto" onClick={showProductModal} />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-8">
-        {isLoadingProducts ? <ProductCardSkeleton /> : null}
+        {isLoadingProducts ? <CardSkeleton /> : null}
         {productList?.map(({ name, ...product }) => (
           <CardProduct
             key={product.id}

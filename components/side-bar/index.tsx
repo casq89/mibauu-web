@@ -12,6 +12,7 @@ import {
 } from '../side-icons';
 import { SideBarOption } from '../side-bar-option';
 import { SubMenuOptions } from '../submenu-options';
+import { usePathname } from 'next/navigation';
 
 type SidebarIconsProps = {
   [key: string]: {
@@ -23,10 +24,18 @@ type SidebarIconsProps = {
   };
 };
 
+const ROUTES = [
+  '/dashboard',
+  '/dashboard/categories',
+  '/dashboard/offers',
+  '/dashboard/consents',
+];
+
 export const SideBar = () => {
   const [isVisibleOptions, seIsVisibleOptions] = React.useState(false);
   const [isActiveLink, setIsActiveLink] = React.useState(0);
   const { logout } = useAuth();
+  const pathname = usePathname();
 
   const handleOptions = (
     event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
@@ -39,22 +48,22 @@ export const SideBar = () => {
 
   const SIDE_BAR_ICONS: SidebarIconsProps = {
     Productos: {
-      href: '/dashboard',
+      href: ROUTES[0],
       component: <StatsIcon />,
       onClick: () => setIsActiveLink(0),
     },
     Categorias: {
-      href: '/dashboard/categories',
+      href: ROUTES[1],
       component: <DocEditIcon />,
       onClick: () => setIsActiveLink(1),
     },
     Promociones: {
-      href: '/dashboard/offers',
+      href: ROUTES[2],
       component: <OffersIcon />,
       onClick: () => setIsActiveLink(2),
     },
     Consentimientos: {
-      href: '/dashboard/consents',
+      href: ROUTES[3],
       component: <UserIcon />,
       onClick: () => setIsActiveLink(3),
     },
@@ -71,6 +80,10 @@ export const SideBar = () => {
       onClick: logout,
     },
   };
+
+  React.useEffect(() => {
+    setIsActiveLink(ROUTES.indexOf(pathname));
+  });
   return (
     <aside
       id="sidebar-multi-level-sidebar"

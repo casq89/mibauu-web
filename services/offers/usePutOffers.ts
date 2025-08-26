@@ -14,7 +14,7 @@ const putOffers = async ({ id, ...restOffer }: OfferDefaultState) => {
     const formData = generateFormOfferRequest({ id, ...restOffer });
     const token = await localStorage.getItem('token');
     const response = await miBauuClient.put<Response>(
-      `/functions/v1/offers`,
+      `/functions/v1/offers/${id}`,
       formData,
       {
         headers: {

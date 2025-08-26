@@ -1,50 +1,50 @@
 'use client';
-import { CardProductProps } from '@/types/products';
+
 import React from 'react';
 import Image from 'next/image';
-import { ToggleSwitch } from '../toggle-switch/indext';
-import { Button } from '../button';
 import { useFormik } from 'formik';
 import {
-  productDefaultState,
-  productValidationSchema,
+  offerDefaultState,
+  offerValidationSchema,
 } from '@/utils/validation-schema';
 import { hasChanged } from '@/utils/objects';
-import { ThinInput } from '../thin-input';
-import { usePutProducts } from '@/services/products/usePutProducts';
-import { ThinSelect } from '../thin-select';
-import { useDeleteProducts } from '@/services/products/useDeleteProduct';
 import { useConfirmAlert } from '@/hooks/use-confirm-alert';
-import { useProductStore } from '@/stores/products';
 import { MAX_FILE_SIZE, VALID_TYPES_PHOTO } from '@/constants/global';
 import { toast } from 'react-toastify';
+import { ThinInput } from '@/components/thin-input';
+import { ToggleSwitch } from '@/components/toggle-switch/indext';
+import { Button } from '@/components/button';
+import { CardOfferProps } from '@/types/Offers';
+import { useOfferStore } from '@/stores/offers';
+import { usePutOffers } from '@/services/offers/usePutOffers';
+import { useDeleteOffers } from '@/services/offers/useDeleteOffers';
 
-export const CardProduct = (product: CardProductProps) => {
-  const { imagen_url, categories } = product;
+export const CardOffer = (offer: CardOfferProps) => {
+  const { image: imagen_url } = offer;
   const [canUpdate, setCanUpdate] = React.useState(false);
   const [imageSrc, setImageSrc] = React.useState(imagen_url);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
-  const defaultState = productDefaultState(product);
+  const defaultState = offerDefaultState(offer);
   const { handleConfirmAlert } = useConfirmAlert();
-  const deleteProductState = useProductStore((state) => state.deleteProduct);
-  const updateProductState = useProductStore((state) => state.updateProduct);
+  const deleteOfferState = useOfferStore((state) => state.deleteOffer);
+  const updateOfferState = useOfferStore((state) => state.updateOffer);
 
-  const { mutateAsync: updateProduct, isPending: isPendingUpdate } =
-    usePutProducts();
-  const { mutateAsync: deleteProduct, isPending: isPendingDelete } =
-    useDeleteProducts();
+  const { mutateAsync: updateOffer, isPending: isPendingUpdate } =
+    usePutOffers();
+  const { mutateAsync: deleteOffer, isPending: isPendingDelete } =
+    useDeleteOffers();
 
   const handleRemoveProduct = async (
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
     e.preventDefault();
     handleConfirmAlert({
-      title: 'Eliminar producto',
-      message: '¿Estas seguro que deseas eliminar este producto?',
+      title: 'Eliminar promoción',
+      message: '¿Estas seguro que deseas eliminar esta promoción?',
       onclick: async () => {
-        const response = await deleteProduct(product.id);
+        const response = await deleteOffer(offer.id);
         if (response.success === true) {
-          deleteProductState(product.id);
+          deleteOfferState(String(offer.id));
         }
       },
     });
@@ -52,19 +52,19 @@ export const CardProduct = (product: CardProductProps) => {
 
   const formik = useFormik({
     initialValues: defaultState,
-    validationSchema: productValidationSchema,
-    onSubmit: async (productFormData) => {
-      const [product] = await updateProduct(productFormData);
-      if (product.id) {
-        updateProductState(product);
+    validationSchema: offerValidationSchema,
+    onSubmit: async (offerFormData) => {
+      const [offer] = await updateOffer(offerFormData);
+      if (offer.id) {
+        updateOfferState(offer);
       }
     },
   });
 
   React.useEffect(() => {
-    const productHasChanged = hasChanged(defaultState, formik.values);
-    setCanUpdate(productHasChanged);
-  }, [formik.values, product, defaultState]);
+    const offerHasChanged = hasChanged(defaultState, formik.values);
+    setCanUpdate(offerHasChanged);
+  }, [formik.values, offer, defaultState]);
 
   const handleUploadImage = () => {
     fileInputRef.current?.click();
@@ -106,7 +106,7 @@ export const CardProduct = (product: CardProductProps) => {
           <span onClick={handleUploadImage}>
             <Image
               className="mx-auto"
-              alt="product image"
+              alt="offer image"
               width={200}
               height={0}
               src={imageSrc}
@@ -126,11 +126,11 @@ export const CardProduct = (product: CardProductProps) => {
         <div className="p-4 space-y-1">
           <ThinInput
             label="Nombre"
-            id="productName"
-            name="productName"
+            id="offerName"
+            name="offerName"
             maxLength={100}
             onChange={formik.handleChange}
-            value={formik.values.productName}
+            value={formik.values.offerName}
           />
           <ThinInput
             label="Descripción"
@@ -141,32 +141,6 @@ export const CardProduct = (product: CardProductProps) => {
             value={formik.values.description}
           />
           <ThinInput
-            label="Código"
-            id="code"
-            name="code"
-            type="number"
-            max="10000"
-            onChange={formik.handleChange}
-            value={formik.values.code}
-          />
-          <ThinSelect
-            label="Categoría"
-            id="category_id"
-            name="category_id"
-            value={formik.values.category_id}
-            onChange={formik.handleChange}
-            options={categories || []}
-          />
-          <ThinInput
-            label="Cantidad"
-            id="stock"
-            name="stock"
-            type="number"
-            max="10000"
-            onChange={formik.handleChange}
-            value={formik.values.stock}
-          />
-          <ThinInput
             label="Precio $"
             id="price"
             name="price"
@@ -175,23 +149,6 @@ export const CardProduct = (product: CardProductProps) => {
             onChange={formik.handleChange}
             value={formik.values.price}
           />
-          <ThinInput
-            label="Descuento"
-            id="disccount"
-            name="disccount"
-            type="number"
-            onChange={formik.handleChange}
-            value={formik.values.disccount}
-          />
-          <div className="flex justify-between border-b border-gray-200 pb-1">
-            <p className="text-sm text-secondary">Promoción:</p>
-            <ToggleSwitch
-              enabled={formik.values.promotion}
-              onToggle={(promotion) =>
-                formik.setFieldValue('promotion', promotion)
-              }
-            />
-          </div>
           <div className="flex justify-between">
             <p className="text-sm text-secondary">Habilitado:</p>
             <ToggleSwitch

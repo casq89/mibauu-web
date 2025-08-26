@@ -1,7 +1,11 @@
 'use client';
 import React from 'react';
 
-export const ProductCardSkeleton = () => {
+type CardSkeletonProps = {
+  long?: number;
+};
+
+export const CardSkeleton = ({ long = 2 }: CardSkeletonProps) => {
   return (
     <>
       {[...Array(3)].map((_, i) => (
@@ -18,22 +22,18 @@ export const ProductCardSkeleton = () => {
               <div className="w-20 h-4 bg-gray-500 rounded" />
               <div className="h-8 bg-gray-600 rounded" />
             </div>
-            <div className="space-y-1">
-              <div className="w-20 h-4 bg-gray-500 rounded" />
-              <div className="h-8 bg-gray-600 rounded" />
-            </div>
-            <div className="space-y-1">
-              <div className="w-20 h-4 bg-gray-500 rounded" />
-              <div className="h-8 bg-gray-600 rounded" />
-            </div>
-            <div className="flex justify-between items-center border-b border-gray-700 pb-1">
-              <div className="w-24 h-4 bg-gray-500 rounded" />
-              <div className="w-10 h-6 bg-gray-600 rounded-full" />
-            </div>
-            <div className="flex justify-between items-center">
-              <div className="w-24 h-4 bg-gray-500 rounded" />
-              <div className="w-10 h-6 bg-gray-600 rounded-full" />
-            </div>
+            {[...Array(long)].map((_, i) => (
+              <div key={i} className="space-y-1">
+                <div className="w-20 h-4 bg-gray-500 rounded" />
+                <div className="h-8 bg-gray-600 rounded" />
+              </div>
+            ))}
+            {[...Array(long)].map((_, i) => (
+              <div key={i} className="flex justify-between items-center">
+                <div className="w-24 h-4 bg-gray-500 rounded" />
+                <div className="w-10 h-6 bg-gray-600 rounded-full" />
+              </div>
+            ))}
           </div>
 
           <div className="flex justify-around mb-4 px-4">
