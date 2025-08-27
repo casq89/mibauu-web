@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import Image from 'next/image';
 import { useFormik } from 'formik';
 import {
   offerDefaultState,
@@ -18,6 +17,7 @@ import { CardOfferProps } from '@/types/Offers';
 import { useOfferStore } from '@/stores/offers';
 import { usePutOffers } from '@/services/offers/usePutOffers';
 import { useDeleteOffers } from '@/services/offers/useDeleteOffers';
+import { ImageUI } from '@/components/image';
 
 export const CardOffer = (offer: CardOfferProps) => {
   const { image: imagen_url } = offer;
@@ -104,14 +104,7 @@ export const CardOffer = (offer: CardOfferProps) => {
       <form onSubmit={formik.handleSubmit}>
         <div className="h-50 cursor-pointer hover:opacity-80">
           <span onClick={handleUploadImage}>
-            <Image
-              className="mx-auto"
-              alt="offer image"
-              width={200}
-              height={0}
-              src={imageSrc}
-              priority
-            />
+            <ImageUI alt="offer image" src={imageSrc} />
           </span>
           <input
             type="file"

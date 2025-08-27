@@ -1,7 +1,6 @@
 'use client';
 import { CardProductProps } from '@/types/products';
 import React from 'react';
-import Image from 'next/image';
 import { ToggleSwitch } from '../toggle-switch/indext';
 import { Button } from '../button';
 import { useFormik } from 'formik';
@@ -18,6 +17,7 @@ import { useConfirmAlert } from '@/hooks/use-confirm-alert';
 import { useProductStore } from '@/stores/products';
 import { MAX_FILE_SIZE, VALID_TYPES_PHOTO } from '@/constants/global';
 import { toast } from 'react-toastify';
+import { ImageUI } from '../image';
 
 export const CardProduct = (product: CardProductProps) => {
   const { imagen_url, categories } = product;
@@ -104,14 +104,7 @@ export const CardProduct = (product: CardProductProps) => {
       <form onSubmit={formik.handleSubmit}>
         <div className="h-50 cursor-pointer hover:opacity-80">
           <span onClick={handleUploadImage}>
-            <Image
-              className="mx-auto"
-              alt="product image"
-              width={200}
-              height={0}
-              src={imageSrc}
-              priority
-            />
+            <ImageUI alt="product image" src={imageSrc} />
           </span>
           <input
             type="file"

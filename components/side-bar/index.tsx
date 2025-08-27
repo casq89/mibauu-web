@@ -83,7 +83,7 @@ export const SideBar = () => {
 
   React.useEffect(() => {
     setIsActiveLink(ROUTES.indexOf(pathname));
-  });
+  }, []);
   return (
     <aside
       id="sidebar-multi-level-sidebar"
