@@ -34,7 +34,7 @@ const ROUTES = [
 export const SideBar = () => {
   const [isVisibleOptions, seIsVisibleOptions] = React.useState(false);
   const [isActiveLink, setIsActiveLink] = React.useState(0);
-  const { logout } = useAuth();
+  const { logout, verifyToken } = useAuth();
   const pathname = usePathname();
 
   const handleOptions = (
@@ -80,6 +80,13 @@ export const SideBar = () => {
       onClick: logout,
     },
   };
+
+  React.useEffect(() => {
+    const handleVerifyToken = async () => {
+      await verifyToken();
+    };
+    handleVerifyToken();
+  }, [isActiveLink]);
 
   React.useEffect(() => {
     setIsActiveLink(ROUTES.indexOf(pathname));
