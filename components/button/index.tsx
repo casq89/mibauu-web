@@ -4,7 +4,7 @@ import React, { ButtonHTMLAttributes } from 'react';
 import { Progress } from '../progress';
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
-  label: string;
+  label?: string;
   style?: string;
   level?: 'primary' | 'secondary' | 'disabled' | 'danger' | 'success';
   isLoading?: boolean;
@@ -38,6 +38,7 @@ export const Button = ({
   style,
   level = 'primary',
   isLoading,
+  children,
   ...buttonProps
 }: ButtonProps) => {
   const progressColor = level === 'primary' ? 'bg-secondary' : 'bg-white';
@@ -49,6 +50,7 @@ export const Button = ({
         className={`${levels[level].background} ${levels[level].hover} focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm w-auto px-5 py-2.5 text-center  ${style}`}
         {...buttonProps}
       >
+        {children}
         {!isLoading ? label : <Progress color={progressColor} />}
       </button>
     </div>

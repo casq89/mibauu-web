@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import React, { InputHTMLAttributes } from "react";
+import React, { InputHTMLAttributes } from 'react';
 
 type CheckboxProps = InputHTMLAttributes<HTMLInputElement> & {
   htmlElement: React.ReactNode;
@@ -18,15 +18,13 @@ export const Checkbox = ({
     <>
       <input
         {...restProps}
-        className={`w-6 h-4 ${style}`}
-        checked={!!restProps.value}
+        type="checkbox"
+        className={`w-6 h-4  accent-primary${style}`}
       />
+
       {htmlElement}
       {error ? (
-        <p
-          id="filled_error_help"
-          className="mt-2 text-xs text-red-600"
-        >
+        <p id="filled_error_help" className="mt-2 text-xs text-red-600">
           {error}
         </p>
       ) : null}

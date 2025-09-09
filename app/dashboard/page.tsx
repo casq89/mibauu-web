@@ -1,6 +1,5 @@
 'use client';
 
-import { Button } from '@/components/button';
 import { CardProduct } from '@/components/card-product';
 import { useGetCategories } from '@/services/categories/useGetCategories';
 import { useGetProducts } from '@/services/products/useGetProducts';
@@ -9,7 +8,7 @@ import React from 'react';
 import ProductModal from './components/product-modal';
 import { useProductStore } from '@/stores/products';
 import { CardSkeleton } from '@/components/card-skeleton';
-import { Autocomplete } from '@/components/autocomplete';
+import { ProductHeader } from './components/product-header';
 
 export default function Page() {
   const [isOpenModal, setIsOpenModal] = React.useState(false);
@@ -20,11 +19,6 @@ export default function Page() {
   } = useGetProducts();
   const { data: categories = [] } = useGetCategories();
   const loadProducts = useProductStore((state) => state.loadProducts);
-  const filterProductsByName = useProductStore(
-    (state) => state.filterProductsByName
-  );
-  const resetFilterProducts = useProductStore((state) => state.resetFilter);
-  const productsNames = products.map((product) => product.name);
 
   React.useEffect(() => {
     if (isSuccessProducts && products) {
@@ -38,24 +32,9 @@ export default function Page() {
 
   const showProductModal = () => setIsOpenModal(!isOpenModal);
 
-  const handleSelect = (value: string) => {
-    if (value === '') resetFilterProducts();
-    filterProductsByName(value);
-  };
-
   return (
     <div className="p-3">
-      <div className="flex items-center mb-3">
-        <div className="flex-1 justify-between flex items-center">
-          <div className="flex items-center">
-            <h1 className="text-primary mr-3">Productos</h1>
-            <Button label="Crear producto" onClick={showProductModal} />
-          </div>
-          <div className="ml-8">
-            <Autocomplete items={productsNames} onSelect={handleSelect} />
-          </div>
-        </div>
-      </div>
+      <ProductHeader showProductModal={showProductModal} />
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-8">
         {isLoadingProducts ? <CardSkeleton /> : null}
         {productList?.map(({ name, ...product }) => (

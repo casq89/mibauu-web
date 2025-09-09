@@ -19,7 +19,7 @@ export type Product = {
 
 export type CardProductProps = Omit<Product, 'name'> & {
   productName: string;
-  categories?: SelectOptions[] ;
+  categories?: SelectOptions[];
 };
 
 export type ProductDefaultState = {
@@ -36,3 +36,13 @@ export type ProductDefaultState = {
   imagen_url: string;
   category_id: string;
 };
+
+export interface FilterState {
+  searchQuery: string;
+  categories: string[];
+  brands: string[];
+  priceRange: [number, number];
+  inStockOnly: boolean;
+  sortBy: 'name' | 'price' | 'rating' | 'newest';
+  sortOrder: 'asc' | 'desc';
+}
