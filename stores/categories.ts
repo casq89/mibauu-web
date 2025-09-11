@@ -3,6 +3,7 @@ import { create } from 'zustand';
 
 type CategoryStore = {
   categories: Category[];
+  allCategories: Category[];
   category: Category;
   loadCategories: (categories: Category[]) => void;
   addCategory: (category: Category) => void;
@@ -10,14 +11,18 @@ type CategoryStore = {
   deleteCategory: (categoryId: string) => void;
   setCategory: (category: Category) => void;
   cleanCategory: () => void;
+  filteredCategorieByName: (string: string) => void;
+  resetFilter: () => void;
 };
 
 const categoryDefault = { id: '', name: '', description: '', enable: false };
 
 export const useCategoryStore = create<CategoryStore>((set) => ({
   categories: [],
+  allCategories: [],
   category: categoryDefault,
-  loadCategories: (categories) => set({ categories }),
+  loadCategories: (categories) =>
+    set({ categories, allCategories: categories }),
   addCategory: (category) =>
     set((state) => ({
       categories: [category, ...state.categories],
@@ -41,4 +46,19 @@ export const useCategoryStore = create<CategoryStore>((set) => ({
       category,
     })),
   cleanCategory: () => set(() => ({ category: categoryDefault })),
+  filteredCategorieByName: (name: string) => {
+    const copyCategories = [...useCategoryStore.getState().allCategories];
+    if (name === '') {
+      set(() => ({ categories: copyCategories }));
+      return;
+    }
+
+    set(() => ({
+      categories: copyCategories.filter((category) =>
+        category.name.toLowerCase().includes(name.toLowerCase())
+      ),
+    }));
+  },
+
+  resetFilter: () => set(() => ({ categories: [] })),
 }));

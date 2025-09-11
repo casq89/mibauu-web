@@ -25,7 +25,7 @@ export function FilterButton() {
         <span className="font-medium">
           Filtros
           {activeFiltersCount > 0 && (
-            <span className="ml-1 text-blue-600">({activeFiltersCount})</span>
+            <span className="ml-1 text-amber-950">({activeFiltersCount})</span>
           )}
         </span>
       </Button>

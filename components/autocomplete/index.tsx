@@ -67,7 +67,7 @@ export const Autocomplete = ({ items, onSelect }: Props) => {
     <div className="relative w-64">
       <input
         type="text"
-        placeholder="Search..."
+        placeholder="Buscar..."
         value={searchTerm}
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
@@ -91,6 +91,7 @@ export const Autocomplete = ({ items, onSelect }: Props) => {
           <li
             key={index}
             onMouseDown={() => handleSelect(result)}
+            onClick={() => handleSelect(result)}
             className={`cursor-pointer transition-colors p-3 ${
               index === highlightedIndex
                 ? 'bg-primary text-white'

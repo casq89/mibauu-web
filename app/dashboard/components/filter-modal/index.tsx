@@ -15,16 +15,16 @@ interface FilterModalProps {
 }
 
 export function FilterModal({ isOpen, onClose }: FilterModalProps) {
-  const {
-    filters,
-    allProducts,
-    toggleCategory,
-    updatePriceRange,
-    updateSort,
-    clearFilters,
-    resetFilter,
-    getActiveFiltersCount,
-  } = useProductStore();
+  const filters = useProductStore((state) => state.filters);
+  const allProducts = useProductStore((state) => state.allProducts);
+  const toggleCategory = useProductStore((state) => state.toggleCategory);
+  const updatePriceRange = useProductStore((state) => state.updatePriceRange);
+  const updateSort = useProductStore((state) => state.updateSort);
+  const clearFilters = useProductStore((state) => state.clearFilters);
+  const resetFilter = useProductStore((state) => state.resetFilter);
+  const getActiveFiltersCount = useProductStore(
+    (state) => state.getActiveFiltersCount
+  );
 
   const categories = allProducts.map((p) => ({
     name: p.category?.name,

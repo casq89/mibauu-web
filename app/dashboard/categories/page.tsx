@@ -9,6 +9,7 @@ import { useDeleteCategory } from '@/services/categories/useDeleteCategory';
 import { CategoryModal } from './components/category-modal';
 import { TableSekeleton } from '@/components/table-skeleton';
 import { NoResults } from '@/components/no-results';
+import { Autocomplete } from '@/components/autocomplete';
 
 export default function Page() {
   const [isOpenModal, setIsOpenModal] = React.useState(false);
@@ -20,9 +21,15 @@ export default function Page() {
   } = useGetCategories();
   const { mutateAsync: updateCategory } = usePutCategories();
   const { mutateAsync: deleteCategory } = useDeleteCategory();
+  const namesCategories = categories.map((category) => category.name);
 
   const loadCategories = useCategoryStore((state) => state.loadCategories);
   const cleanCategory = useCategoryStore((state) => state.cleanCategory);
+  const allCategories = useCategoryStore((state) => state.allCategories);
+  const filteredCategorieByName = useCategoryStore(
+    (state) => state.filteredCategorieByName
+  );
+  const resetFilter = useCategoryStore((state) => state.resetFilter);
 
   React.useEffect(() => {
     if (isSuccessCategories && categories) {
@@ -41,13 +48,28 @@ export default function Page() {
     setIsOpenModal(!isOpenModal);
   };
 
+  const handleSelect = (value: string) => {
+    if (value === '') {
+      resetFilter();
+      loadCategories(allCategories);
+      return;
+    }
+    filteredCategorieByName(value);
+  };
+
   if (isLoadingCategories) return <TableSekeleton />;
 
   return (
     <div className="p-3">
-      <div className="flex items-center mb-3">
-        <h1 className="text-primary mr-3">Categorías</h1>
-        <Button label="Crear categoría" onClick={showCategoryModalCreate} />
+      <div className="flex items-center mb-3 justify-between">
+        <div className="flex items-center">
+          <h1 className="text-primary mr-3">Categorías</h1>
+          <Button label="Crear categoría" onClick={showCategoryModalCreate} />
+        </div>
+
+        <div>
+          <Autocomplete items={namesCategories} onSelect={handleSelect} />
+        </div>
       </div>
       {!categoriesList.length ? (
         <NoResults
