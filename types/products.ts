@@ -22,6 +22,14 @@ export type CardProductProps = Omit<Product, 'name'> & {
   categories?: SelectOptions[];
 };
 
+export type CreateProduct = {
+  id: string;
+  name: string;
+  description: string;
+  enable?: boolean;
+  image_url?: string;
+};
+
 export type ProductDefaultState = {
   id: number;
   image: string;

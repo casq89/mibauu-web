@@ -2,19 +2,23 @@ import { useMutation } from '@tanstack/react-query';
 import { miBauuClient } from '../common/serviceBase';
 import { handleError } from '@/utils/requests';
 import { toast } from 'react-toastify';
-import { Category, CategoryDefaultState } from '@/types/categories';
+import { Category } from '@/types/categories';
+import { generateFormRequestCategory } from '@/utils/categories';
 
 type Response = {
   data: Category[];
 };
 
-const putCategories = async ({ id, ...restCategory }: CategoryDefaultState) => {
+const putCategories = async ({ id, ...restCategory }: Category) => {
+  console.log({ id, ...restCategory });
   try {
+    const data = generateFormRequestCategory({ id, ...restCategory });
     const token = await localStorage.getItem('token');
     const response = await miBauuClient.put<Response>(
       `/functions/v1/categories/${id}`,
-      restCategory,
+      data,
       {
+        maxBodyLength: Infinity,
         headers: {
           Authorization: 'Bearer ' + token,
         },
@@ -23,6 +27,7 @@ const putCategories = async ({ id, ...restCategory }: CategoryDefaultState) => {
     toast.success('Categoría actualizada correctamente');
     return response.data.data;
   } catch (error) {
+    console.log('error: ', error);
     handleError(error);
     return [];
   }
@@ -31,6 +36,6 @@ const putCategories = async ({ id, ...restCategory }: CategoryDefaultState) => {
 export const usePutCategories = () => {
   return useMutation({
     mutationKey: ['put_categories'],
-    mutationFn: (category: CategoryDefaultState) => putCategories(category),
+    mutationFn: (category: Category) => putCategories(category),
   });
 };

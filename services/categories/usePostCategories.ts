@@ -3,6 +3,7 @@ import { miBauuClient } from '../common/serviceBase';
 import { handleError } from '@/utils/requests';
 import { toast } from 'react-toastify';
 import { Category } from '@/types/categories';
+import { generateFormRequestCategory } from '@/utils/categories';
 
 type Response = {
   data: Category[];
@@ -10,10 +11,11 @@ type Response = {
 
 const postCategories = async (category: Category) => {
   try {
+    const data = generateFormRequestCategory(category);
     const token = await localStorage.getItem('token');
     const response = await miBauuClient.post<Response>(
       `/functions/v1/categories`,
-      category,
+      data,
       {
         headers: {
           Authorization: 'Bearer ' + token,

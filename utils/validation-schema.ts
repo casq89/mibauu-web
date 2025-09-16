@@ -88,16 +88,18 @@ export const createProductDefaultState = {
 
 export const createCategoryValidationSchema = Yup.object({
   id: Yup.number(),
-  categoryName: Yup.string(),
+  name: Yup.string(),
   description: Yup.string(),
   enable: Yup.string(),
+  image_url: Yup.string(),
 });
 
 export const createCategoryDefatulState = {
   id: '',
-  categoryName: '',
+  name: '',
   description: '',
   enable: 'true',
+  image: '',
 };
 
 export const createOfferValidationSchema = Yup.object({

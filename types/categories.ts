@@ -3,6 +3,8 @@ export type Category = {
   name: string;
   description: string;
   enable: boolean;
+  image_url?: string;
+  image?: File | string;
 };
 
 export type CategoryDefaultState = {
@@ -10,4 +12,5 @@ export type CategoryDefaultState = {
   name?: string;
   description?: string;
   enable?: boolean;
+  image?: File | string;
 };
